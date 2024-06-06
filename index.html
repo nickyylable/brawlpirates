@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>Черепа</title>
-    <style>
+  <style>
         @font-face {
             font-family: 'Intro';
             src: url('intro.otf') format('opentype'); /* Убедитесь, что путь правильный */
@@ -34,7 +34,7 @@
         }
         #message {
             text-align: center;
-            margin-top: -250px;
+            margin-top: -280px;
             font-size: 30px;
             color: black;
             font-family: 'Intro', sans-serif;
@@ -50,6 +50,13 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease; /* Плавный переход для прозрачности */
+        }
+
+        #modal.show {
+            display: flex;
+            opacity: 1;
         }
         .modal-content {
             background: linear-gradient(to right, #b4ec51, #429321); /* Горизонтальный градиент */
@@ -130,7 +137,26 @@
         background-color: #c9302c; /* Темнее красный при наведении */
         box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Тень для добавления глубины */
     }
+    .selected-skull {
+        transform: translateY(-20px); /* Перемещает выбранный череп чуть выше */
+        position: relative;
+    }
 
+    .selected-skull::after {
+        content: url('2.png'); /* Путь к вашему изображению алмаза */
+        position: absolute;
+        bottom: -15px; /* Позиционирует алмаз под черепом */
+        left: 50%;
+        transform: translateX(-50%);
+        width: 15px; /* Маленький размер алмаза */
+        height: auto;
+    }
+    .diamond {
+        position: absolute;
+        width: 6px;  // Выставите подходящий размер
+        height: auto;
+        z-index: 25;  // Меньше, чем у черепа, чтобы находиться под ним
+    }
 
 
     </style>
@@ -140,6 +166,7 @@
         <img src="1.png" alt="Череп 1" id="skull1">
         <img src="1.png" alt="Череп 2" id="skull2">
         <img src="1.png" alt="Череп 3" id="skull3">
+        <img src="3.png" alt="Алмаз" id="diamond" class="diamond" style="display: none;">
     </div>
     <div class="button-container">
         <button class="start-button" onclick="openModal()">Start</button>
@@ -165,12 +192,17 @@
                 input.placeholder = 'Введите hash id';
             } else {
                 input.classList.remove('error');
+                document.getElementById('diamond').style.display = 'none'; // Скрыть алмаз
                 startShuffle();
             }
         }
 
+
         function startShuffle() {
             document.getElementById('modal').style.display = 'none';
+            document.querySelectorAll('.container img').forEach(img => {
+                img.classList.remove('selected-skull'); // Сбрасывает выделение перед новой анимацией
+            });
             shuffleSkulls();
         }
 
@@ -207,14 +239,47 @@
             shuffleStep(1);
         }
 
-        function displayRandomMessage() {
+       function displayRandomMessage() {
             const messages = ["Правый череп", "По Середине", "Левый череп"];
+            const skullIds = ["skull3", "skull2", "skull1"];
             const randomIndex = Math.floor(Math.random() * messages.length);
             document.getElementById('message').textContent = messages[randomIndex];
+
+            // Сбросить предыдущий выделенный череп
+            document.querySelectorAll('.container img').forEach(img => {
+                img.classList.remove('selected-skull');
+                img.style.transform = '';
+            });
+
+            // Выделите новый выбранный череп и приподнимите его
+            const selectedSkull = document.getElementById(skullIds[randomIndex]);
+            selectedSkull.classList.add('selected-skull');
+            selectedSkull.style.transform = 'translateY(-23px)';  // Поднять череп
+
+            // Показать алмаз под выбранным черепом
+            const diamond = document.getElementById('diamond');
+            diamond.style.display = 'block';  // Сделать алмаз видимым
+            diamond.style.left = `${selectedSkull.offsetLeft + selectedSkull.offsetWidth / 2 - diamond.offsetWidth / 2}px`;
+            diamond.style.top = `${selectedSkull.offsetTop + selectedSkull.offsetHeight - 20}px`;  // Поднять алмаз выше
         }
+
+        function openModal() {
+            const modal = document.getElementById('modal');
+            const input = document.getElementById('hashIdInput');
+            input.value = ''; // Очищает поле ввода при открытии модального окна
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10); // Добавить небольшой таймаут, чтобы обеспечить применение CSS transition
+        }
+
         function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-    }
+            const modal = document.getElementById('modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 500); // Таймаут должен совпадать с продолжительностью transition
+        }
 
     </script>
 </body>
