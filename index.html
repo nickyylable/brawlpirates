@@ -221,6 +221,8 @@
         }
         function openModal() {
             const modal = document.getElementById('modal');
+            const input = document.getElementById('hashIdInput');
+            input.value = ''; // Очищает поле ввода при открытии модального окна
             modal.style.display = 'flex';
             setTimeout(() => {
                 modal.classList.add('show');
@@ -234,7 +236,6 @@
                 modal.style.display = 'none';
             }, 500); // Таймаут должен совпадать с продолжительностью transition
         }
-
     </script>
 </body>
 </html>
