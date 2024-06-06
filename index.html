@@ -50,6 +50,13 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease; /* Плавный переход для прозрачности */
+        }
+
+        #modal.show {
+            display: flex;
+            opacity: 1;
         }
         .modal-content {
             background: linear-gradient(to right, #b4ec51, #429321); /* Горизонтальный градиент */
@@ -212,9 +219,21 @@
             const randomIndex = Math.floor(Math.random() * messages.length);
             document.getElementById('message').textContent = messages[randomIndex];
         }
+        function openModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10); // Добавить небольшой таймаут, чтобы обеспечить применение CSS transition
+        }
+
         function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-    }
+            const modal = document.getElementById('modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 500); // Таймаут должен совпадать с продолжительностью transition
+        }
 
     </script>
 </body>
