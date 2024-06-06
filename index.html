@@ -141,16 +141,6 @@
         transform: translateY(-20px); /* Перемещает выбранный череп чуть выше */
         position: relative;
     }
-
-    .selected-skull::after {
-        content: url('2.png'); /* Путь к вашему изображению алмаза */
-        position: absolute;
-        bottom: -15px; /* Позиционирует алмаз под черепом */
-        left: 50%;
-        transform: translateX(-50%);
-        width: 15px; /* Маленький размер алмаза */
-        height: auto;
-    }
     .diamond {
         position: absolute;
         width: 6px;  // Выставите подходящий размер
@@ -260,7 +250,7 @@
             const diamond = document.getElementById('diamond');
             diamond.style.display = 'block';  // Сделать алмаз видимым
             diamond.style.left = `${selectedSkull.offsetLeft + selectedSkull.offsetWidth / 2 - diamond.offsetWidth / 2}px`;
-            diamond.style.top = `${selectedSkull.offsetTop + selectedSkull.offsetHeight - 20}px`;  // Поднять алмаз выше
+            diamond.style.top = `${selectedSkull.offsetTop + selectedSkull.offsetHeight - 40}px`;  // Поднять алмаз выше
         }
 
         function openModal() {
